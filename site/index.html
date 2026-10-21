@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https:; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="theme-color" content="#10212b"><meta name="referrer" content="no-referrer">
+<title>Seed Watch | Phân tích địa chỉ ví an toàn</title>
+<meta name="description" content="Bảng điều khiển Watch-Only cho Bitcoin và Ethereum. Không nhập seed phrase hay private key.">
+<link rel="icon" href="data:,"><link rel="stylesheet" href="./style.css"><script defer src="./config.js"></script><script defer src="./app.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="shell topbar-inner"><a class="brand" href="./" aria-label="Seed Watch trang chủ"><span class="logo">◈</span><span>Seed<span class="brand-accent">Watch</span><small>HYBRID · CHAIN INTELLIGENCE</small></span></a>
+  <nav aria-label="Điều hướng"><a class="current" href="#dashboard">Tổng quan</a><a href="#lookup">Tra cứu</a><a href="#security">Bảo mật</a><a href="https://github.com/xulytiengviet/seed" rel="noopener noreferrer" target="_blank">Mã nguồn ↗</a></nav>
+  <span class="header-status"><i class="dot" id="status-dot"></i><span id="status-label">Chưa kết nối API</span></span></div>
+</header>
+<main id="dashboard" class="shell">
+<section class="hero">
+  <div class="eyebrow"><span class="signal">●</span> WEB3 MONITORING STUDIO · VIỆT NAM</div>
+  <h1>Phân tích ví <em>minh bạch.</em><br>Theo dõi không cần khóa.</h1>
+  <p class="lead">Tra cứu số dư Bitcoin và Ethereum bằng <strong>địa chỉ công khai</strong>. Không yêu cầu cụm từ khôi phục, seed phrase hay private key.</p>
+  <div class="hero-actions"><a href="#lookup" class="primary-link">Khám phá địa chỉ <span>↗</span></a><a class="secondary-link" href="#security">Tìm hiểu kiến trúc bảo mật ↓</a></div>
+  <div class="hero-ornament" aria-hidden="true"><div class="ring ring-a"></div><div class="ring ring-b"></div><div class="orbit-core">₿<span>Ξ</span></div></div>
+</section>
+<section class="stats" aria-label="Trạng thái hệ thống">
+ <article class="stat"><div class="stat-label">MẠNG HỖ TRỢ <span>↗</span></div><strong>02 <small>MAINNET</small></strong><p>Bitcoin · Ethereum</p></article>
+ <article class="stat"><div class="stat-label">THÔNG TIN BÍ MẬT <span>◈</span></div><strong>0 <small>SEED UPLOADED</small></strong><p>Thiết kế không nhận seed</p></article>
+ <article class="stat"><div class="stat-label">PHÍ TRA CỨU <span>₫</span></div><strong id="price-value">0 <small>DEMO</small></strong><p id="price-caption">Bản thử nghiệm watch-only</p></article>
+ <article class="stat"><div class="stat-label">API CLOUDFLARE <span>●</span></div><strong id="api-state">CHƯA KẾT NỐI</strong><p id="api-caption">Cần cấu hình URL Worker</p></article>
+</section>
+<section class="workspace" id="lookup">
+<div class="pane">
+ <div class="pane-head"><div><div class="eyebrow subtle">01 / WATCH-ONLY SCANNER</div><h2>Tra cứu số dư</h2><p>Nhập địa chỉ ví công khai bạn muốn kiểm tra.</p></div><span class="tiny-tag">KHÔNG CẦN ĐĂNG NHẬP</span></div>
+ <form id="scan-form" autocomplete="off">
+  <label for="chain">Mạng blockchain</label><div class="network-choices"><label class="network-option"><input type="radio" name="chain" value="BTC" checked><span class="token bitcoin">₿</span> Bitcoin <span class="network-caption">BTC</span></label><label class="network-option"><input type="radio" name="chain" value="ETH"><span class="token ethereum">Ξ</span> Ethereum <span class="network-caption">ETH</span></label></div>
+  <label for="address">Địa chỉ ví công khai</label><div class="address-box"><span class="input-mark">⌕</span><input id="address" name="address" spellcheck="false" maxlength="100" required placeholder="bc1q... hoặc 0x..." aria-describedby="address-help"></div><p class="help" id="address-help">Không nhập 12/24 từ khôi phục, WIF, private key hoặc xprv.</p>
+  <button class="scan-button" type="submit" id="scan-button"><span>Quét địa chỉ công khai</span><span aria-hidden="true">↗</span></button>
+ </form>
+ <div class="result" id="result" role="status" aria-live="polite"><div class="result-icon">◎</div><div><h3>Chờ yêu cầu tra cứu</h3><p>Kết nối Worker để xem số dư từ blockchain.</p></div></div>
+</div>
+<aside class="side-pane">
+ <div class="pane-head"><div><div class="eyebrow subtle">02 / LIVE CONNECTION</div><h2>Kết nối dữ liệu</h2><p>Giám sát trạng thái API và nguồn truy vấn.</p></div></div>
+ <div class="connection-list"><div><span>Truyền dữ liệu</span><b>HTTPS / JSON</b></div><div><span>Gửi seed phrase</span><b class="good">Không</b></div><div><span>Trình xác thực offline</span><b class="good">Tách biệt</b></div><div><span>Nguồn BTC</span><b>mempool.space</b></div><div><span>Nguồn ETH</span><b>Blockscout</b></div></div>
+ <div class="connect-config"><label for="api-url">Cloudflare Worker URL</label><div class="endpoint-field"><input id="api-url" type="url" spellcheck="false" placeholder="https://...workers.dev" aria-describedby="api-help"><button type="button" id="connect-button">Kết nối</button></div><p id="api-help" class="help">Chỉ lưu URL API trong trình duyệt; không lưu địa chỉ ví hay kết quả.</p></div>
+ <div class="info-strip">ⓘ <span>URL Worker phải là HTTPS. Nếu chưa triển khai Cloudflare, bạn vẫn xem được giao diện nhưng chưa có số dư thực.</span></div>
+</aside></section>
+<section class="security" id="security"><div class="section-heading"><div class="eyebrow subtle">03 / SECURITY BY DESIGN</div><h2>Tách biệt bí mật. Minh bạch dữ liệu.</h2><p>Ba lớp độc lập, không vận chuyển khóa cá nhân qua mạng.</p></div>
+<div class="security-grid">
+ <article><span class="feature-symbol">⌁</span><h3>Mnemonic · Ngoại tuyến</h3><p>Tải công cụ kiểm tra BIP39 từ repo, ngắt mạng trước khi sử dụng. Công cụ chỉ kiểm tra số từ và checksum, không xuất private key.</p><span class="mini-label">LOCAL ONLY</span></article>
+ <article><span class="feature-symbol">▤</span><h3>Dashboard · GitHub Pages</h3><p>Giao diện công khai, nhận địa chỉ công khai và hiển thị dữ liệu watch-only. Không có ô nhập seed phrase.</p><span class="mini-label">PUBLIC ADDRESS</span></article>
+ <article><span class="feature-symbol">☷</span><h3>Cloudflare · Workers</h3><p>Định tuyến tới nguồn dữ liệu blockchain, kiểm soát CORS và giới hạn đầu vào. D1/R2 tùy chọn không chứa thông tin khóa.</p><span class="mini-label">ZERO-SECRET BACKEND</span></article>
+</div></section>
+<footer><span>◈ SEED WATCH · HYBRID SECURITY ARCHITECTURE</span><span>Không nhận seed/private key · <a href="https://github.com/xulytiengviet/seed" rel="noopener noreferrer" target="_blank">GitHub ↗</a></span></footer>
+</main>
+</body></html>
