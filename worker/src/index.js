@@ -1,3 +1,4 @@
+import { adminPage } from './admin.js';
 /* Seed Watch API: address-only blockchain explorer, no mnemonic/private-key inputs.
  * Keep logs disabled; no persistent wallet identifier storage in D1.
  */
@@ -109,7 +110,7 @@ export default {
   const url=new URL(request.url);
   if(request.method==='OPTIONS') {
    const allowed = request.headers.get('Origin')===(env.ALLOWED_ORIGIN||'https://xulytiengviet.github.io');
-   return allowed ? response({},204,request,env) : bad('Nguồn truy cập không được phép.',403,request,env);
+   return allowed ? new Response(null,{status:204,headers:{'Access-Control-Allow-Origin':request.headers.get('Origin'),'Access-Control-Allow-Methods':'GET, OPTIONS','Access-Control-Allow-Headers':'content-type','Access-Control-Max-Age':'600','Vary':'Origin'}}) : bad('Nguồn truy cập không được phép.',403,request,env);
   }
   if(request.method!=='GET') return bad('Chỉ hỗ trợ GET.',405,request,env);
   if(url.pathname==='/v1/health') return response({
@@ -132,6 +133,13 @@ export default {
     await recordAggregate(env,chain,false);
     return bad('Không thể xác minh số dư từ nhà cung cấp blockchain. Vui lòng thử lại.',502,request,env);
    }
+  }
+  if(url.pathname==='/admin'){
+   if(!await adminAuthorized(request,env))return bad('Không được phép truy cập quản trị.',403,request,env);
+   return new Response(adminPage(),{status:200,headers:{
+    'content-type':'text/html; charset=utf-8','cache-control':'no-store, private',
+    'content-security-policy':"default-src 'self'; connect-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; object-src 'none'; frame-ancestors 'none'",
+    'x-content-type-options':'nosniff','referrer-policy':'no-referrer'}});
   }
   if(url.pathname==='/v1/admin/stats'){
    if(!await adminAuthorized(request,env))return bad('Không được phép truy cập quản trị.',403,request,env);
