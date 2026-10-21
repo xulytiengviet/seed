@@ -1,0 +1,22 @@
+name = "seed-watch-api"
+main = "src/index.js"
+compatibility_date = "2026-10-21"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGIN = "https://xulytiengviet.github.io"
+# Optional: configure via Cloudflare dashboard Worker settings only after
+# creating Cloudflare Access on an admin hostname:
+# CF_ACCESS_TEAM_DOMAIN = "your-team.cloudflareaccess.com"
+# CF_ACCESS_AUD = "your-access-app-audience"
+# ADMIN_EMAILS = "admin@example.com"
+
+# D1 is OPTIONAL, needs a real database_id; create via Cloudflare Dashboard
+# or: npx wrangler d1 create seed_watch
+# Uncomment after provisioning the D1 database:
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "seed_watch"
+# database_id = "YOUR_REAL_D1_DATABASE_ID"
+
+# R2 is deliberately not bound. No private reports in the MVP.
