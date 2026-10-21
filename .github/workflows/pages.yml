@@ -1,0 +1,35 @@
+name: Publish Seed Watch (GitHub Pages)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure public Worker URL (never secrets)
+        env:
+          SEED_WORKER_URL: ${{ vars.SEED_WORKER_URL }}
+        run: |
+          node -e "const fs=require('fs');const u=process.env.SEED_WORKER_URL||'';if(u && (!u.startsWith('https://') || u.includes(' ')))throw Error('Invalid Worker URL');fs.writeFileSync('site/config.js','window.SEED_WATCH_API = '+JSON.stringify(u)+';\\n')"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./site
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
